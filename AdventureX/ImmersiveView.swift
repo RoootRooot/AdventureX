@@ -15,7 +15,7 @@ struct ImmersiveView: View {
     @State private var boxEntity = ModelEntity()
     @State private var pointEntities: [UUID: [ModelEntity]] = [:]
     @State private var isBoxCreated = false
-
+    
     var body: some View {
         RealityView { content in
             content.add(anchor)
@@ -35,7 +35,7 @@ struct ImmersiveView: View {
             }
         }
     }
-
+    
     private func createBox() {
         let boxMesh = MeshResource.generateBox(size: [1.8, 1.8, 1.8])
         let boxMaterial = SimpleMaterial(color: .clear, isMetallic: false)
@@ -43,12 +43,12 @@ struct ImmersiveView: View {
         boxEntity.position = [0, 1, -4]
         self.anchor.addChild(boxEntity)
     }
-
+    
     private func updateContent(oldFrames: [Frame], newFrames: [Frame]) {
         DispatchQueue.main.async {
             let oldFrameIDs = Set(oldFrames.map { $0.id })
             let newFrameIDs = Set(newFrames.map { $0.id })
-
+            
             let framesToRemove = oldFrameIDs.subtracting(newFrameIDs)
             for frameID in framesToRemove {
                 if let entities = self.pointEntities.removeValue(forKey: frameID) {
@@ -57,10 +57,10 @@ struct ImmersiveView: View {
                     }
                 }
             }
-
+            
             let cubeMesh = MeshResource.generateBox(size: 0.04)
             let cubeMaterial = SimpleMaterial(color: .white, roughness: 1.0, isMetallic: false)
-
+            
             let framesToAdd = newFrameIDs.subtracting(oldFrameIDs)
             for frame in newFrames {
                 if framesToAdd.contains(frame.id) {

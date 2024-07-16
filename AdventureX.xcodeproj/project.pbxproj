@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1ECE8EA12C4651F900D07977 /* RealityKitContent in Frameworks */ = {isa = PBXBuildFile; productRef = 1ECE8EA02C4651F900D07977 /* RealityKitContent */; };
+		1ECE8EC42C46A0D100D07977 /* SocketIO in Frameworks */ = {isa = PBXBuildFile; productRef = 1ECE8EC32C46A0D100D07977 /* SocketIO */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,6 +36,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1ECE8EA12C4651F900D07977 /* RealityKitContent in Frameworks */,
+				1ECE8EC42C46A0D100D07977 /* SocketIO in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -87,6 +89,7 @@
 			name = AdventureX;
 			packageProductDependencies = (
 				1ECE8EA02C4651F900D07977 /* RealityKitContent */,
+				1ECE8EC32C46A0D100D07977 /* SocketIO */,
 			);
 			productName = AdventureX;
 			productReference = 1ECE8E9B2C4651F900D07977 /* AdventureX.app */;
@@ -116,6 +119,9 @@
 				Base,
 			);
 			mainGroup = 1ECE8E922C4651F900D07977;
+			packageReferences = (
+				1ECE8EC22C46A0D100D07977 /* XCRemoteSwiftPackageReference "socket.io-client-swift" */,
+			);
 			productRefGroup = 1ECE8E9C2C4651F900D07977 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -340,10 +346,26 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCRemoteSwiftPackageReference section */
+		1ECE8EC22C46A0D100D07977 /* XCRemoteSwiftPackageReference "socket.io-client-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/socketio/socket.io-client-swift.git";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
 /* Begin XCSwiftPackageProductDependency section */
 		1ECE8EA02C4651F900D07977 /* RealityKitContent */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = RealityKitContent;
+		};
+		1ECE8EC32C46A0D100D07977 /* SocketIO */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1ECE8EC22C46A0D100D07977 /* XCRemoteSwiftPackageReference "socket.io-client-swift" */;
+			productName = SocketIO;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
