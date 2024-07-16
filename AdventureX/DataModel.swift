@@ -5,9 +5,9 @@
 //  Created by GH on 7/16/24.
 //
 
+import simd
 import Combine
 import Foundation
-import simd
 
 struct Frame: Equatable {
     let id = UUID()
