@@ -10,8 +10,7 @@ import RealityKit
 import RealityKitContent
 
 struct ContentView: View {
-
-    @State private var enlarge = false
+    @EnvironmentObject var positionData: PositionData
 
     var body: some View {
         RealityView { content in
@@ -21,26 +20,15 @@ struct ContentView: View {
             }
         } update: { content in
             // Update the RealityKit content when SwiftUI state changes
-            if let scene = content.entities.first {
-                let uniformScale: Float = enlarge ? 1.4 : 1.0
-                scene.transform.scale = [uniformScale, uniformScale, uniformScale]
-            }
         }
-        .gesture(TapGesture().targetedToAnyEntity().onEnded { _ in
-            enlarge.toggle()
-        })
         .toolbar {
             ToolbarItemGroup(placement: .bottomOrnament) {
-                VStack (spacing: 12) {
-                    Button {
-                        enlarge.toggle()
-                    } label: {
-                        Text(enlarge ? "Reduce RealityView Content" : "Enlarge RealityView Content")
-                    }
-                    .animation(.none, value: 0)
-                    .fontWeight(.semibold)
-
+                VStack {
                     ToggleImmersiveSpaceButton()
+                    
+                    Button("Refresh Positions") {
+                        positionData.generateRandomPositions(count: 1000)
+                    }
                 }
             }
         }
@@ -50,4 +38,5 @@ struct ContentView: View {
 #Preview(windowStyle: .volumetric) {
     ContentView()
         .environment(AppModel())
+        .environmentObject(PositionData())
 }
