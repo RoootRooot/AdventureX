@@ -10,20 +10,19 @@ import SwiftUI
 @main
 struct AdventureXApp: App {
     @State private var appModel = AppModel()
-    @StateObject private var positionData = PositionData()
-
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
                 .environment(appModel)
-                .environmentObject(positionData)
+                .environmentObject(PositionData.shared)
         }
         .windowStyle(.volumetric)
         
         ImmersiveSpace(id: appModel.immersiveSpaceID) {
             ImmersiveView()
                 .environment(appModel)
-                .environmentObject(positionData)
+                .environmentObject(PositionData.shared)
                 .onAppear {
                     appModel.immersiveSpaceState = .open
                 }

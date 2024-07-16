@@ -11,6 +11,8 @@ import RealityKitContent
 
 struct ContentView: View {
     @EnvironmentObject var positionData: PositionData
+    @State private var isGeneratingPoints = false
+    @State private var timer: Timer?
 
     var body: some View {
         RealityView { content in
@@ -25,18 +27,33 @@ struct ContentView: View {
             ToolbarItemGroup(placement: .bottomOrnament) {
                 VStack {
                     ToggleImmersiveSpaceButton()
-                    
-                    Button("Refresh Positions") {
-                        positionData.generateRandomPositions(count: 1000)
+
+                    Button(isGeneratingPoints ? "Stop Generating Points" : "Start Generating Points") {
+                        isGeneratingPoints.toggle()
+                        if isGeneratingPoints {
+                            timer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { _ in
+                                positionData.generateRandomPoints(count: 50)
+                            }
+                        } else {
+                            timer?.invalidate()
+                            timer = nil
+                        }
                     }
                 }
             }
         }
+        .onChange(of: positionData.frames) { oldFrames, newFrames in
+            updateContent(with: newFrames)
+        }
+    }
+
+    private func updateContent(with frames: [Frame]) {
+        // Update RealityKit content with the new frames
     }
 }
 
 #Preview(windowStyle: .volumetric) {
     ContentView()
         .environment(AppModel())
-        .environmentObject(PositionData())
+        .environmentObject(PositionData.shared)
 }
