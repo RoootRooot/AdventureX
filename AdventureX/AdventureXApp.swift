@@ -15,14 +15,14 @@ struct AdventureXApp: App {
         WindowGroup {
             ContentView()
                 .environment(appModel)
-                .environmentObject(PositionData.shared)
+                .environment(PositionData.shared)
         }
         .windowStyle(.volumetric)
         
         ImmersiveSpace(id: appModel.immersiveSpaceID) {
             ImmersiveView()
                 .environment(appModel)
-                .environmentObject(PositionData.shared)
+                .environment(PositionData.shared)
                 .onAppear {
                     appModel.immersiveSpaceState = .open
                 }

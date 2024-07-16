@@ -7,21 +7,18 @@
 
 import SwiftUI
 import RealityKit
-import RealityKitContent
 
 struct ContentView: View {
-    @EnvironmentObject var positionData: PositionData
+    @Environment(PositionData.self) var positionData
     @State private var isGeneratingPoints = false
     @State private var timer: Timer?
 
     var body: some View {
         RealityView { content in
             // Add the initial RealityKit content
-            if let scene = try? await Entity(named: "Scene", in: realityKitContentBundle) {
-                content.add(scene)
-            }
         } update: { content in
             // Update the RealityKit content when SwiftUI state changes
+            updateContent(with: positionData.frames)
         }
         .toolbar {
             ToolbarItemGroup(placement: .bottomOrnament) {
@@ -31,12 +28,9 @@ struct ContentView: View {
                     Button(isGeneratingPoints ? "Stop Generating Points" : "Start Generating Points") {
                         isGeneratingPoints.toggle()
                         if isGeneratingPoints {
-                            timer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { _ in
-                                positionData.generateRandomPoints(count: 50)
-                            }
+                            startGeneratingPoints()
                         } else {
-                            timer?.invalidate()
-                            timer = nil
+                            stopGeneratingPoints()
                         }
                     }
                 }
@@ -50,10 +44,20 @@ struct ContentView: View {
     private func updateContent(with frames: [Frame]) {
         // Update RealityKit content with the new frames
     }
+
+    private func startGeneratingPoints() {
+        timer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { _ in
+            positionData.generateRandomPoints(count: 50)
+        }
+    }
+
+    private func stopGeneratingPoints() {
+        timer?.invalidate()
+        timer = nil
+    }
 }
 
 #Preview(windowStyle: .volumetric) {
     ContentView()
-        .environment(AppModel())
-        .environmentObject(PositionData.shared)
+        .environment(PositionData.shared)
 }
