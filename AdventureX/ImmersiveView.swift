@@ -30,6 +30,9 @@ struct ImmersiveView: View {
                 positionData.generateRandomPoints(count: 50)
             }
         }
+        .onDisappear {
+            clearBox()
+        }
         .onChange(of: positionData.frames) { oldFrames, newFrames in
             DispatchQueue.global(qos: .userInitiated).async {
                 self.updateContent(oldFrames: oldFrames, newFrames: newFrames)
@@ -45,6 +48,15 @@ struct ImmersiveView: View {
         boxEntity.position = [0, 1, -4]
         
         self.anchor.addChild(boxEntity)
+    }
+    
+    private func clearBox() {
+        for (_, entities) in pointEntities {
+            for entity in entities {
+                boxEntity.removeChild(entity)
+            }
+        }
+        pointEntities.removeAll()
     }
     
     private func updateContent(oldFrames: [Frame], newFrames: [Frame]) {
@@ -69,12 +81,10 @@ struct ImmersiveView: View {
             
             for frame in newFrames {
                 if framesToAdd.contains(frame.id) {
-                    
                     var entities = [ModelEntity]()
                     
                     for position in frame.positions {
                         let cube = ModelEntity(mesh: cubeMesh, materials: [cubeMaterial])
-                        
                         cube.position = position
                         cube.collision = CollisionComponent(shapes: [ShapeResource.generateBox(size: [0.02, 0.02, 0.02])])
                         

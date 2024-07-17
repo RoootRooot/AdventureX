@@ -56,13 +56,22 @@ class PositionData {
             frames.removeFirst(frames.count - 10)
         }
     }
+    
+    func clearFrames() {
+        updateQueue.async {
+            self.ringBuffer = RingBuffer(size: self.ringBuffer.size)
+            DispatchQueue.main.async {
+                self.frames.removeAll()
+            }
+        }
+    }
 }
 
 class RingBuffer<T> {
     private var buffer: [T?]
     private var readIndex = 0
     private var writeIndex = 0
-    private let size: Int // 缓冲区大小
+    let size: Int // 缓冲区大小
     private var count = 0
     
     init(size: Int) {
