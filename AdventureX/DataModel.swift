@@ -6,10 +6,10 @@
 //
 
 import simd
-import Combine
 import Foundation
+import Observation
 
-struct Frame: Equatable {
+struct Frame: Equatable, Identifiable {
     let id = UUID()
     let positions: [SIMD3<Float>] // 3D 浮点数向量
     

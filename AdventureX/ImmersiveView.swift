@@ -39,7 +39,6 @@ struct ImmersiveView: View {
     
     private func createBox() {
         let boxMesh = MeshResource.generateBox(size: [1.8, 1.8, 1.8])
-        
         let boxMaterial = SimpleMaterial(color: .clear, isMetallic: false)
         
         boxEntity = ModelEntity(mesh: boxMesh, materials: [boxMaterial])
@@ -51,7 +50,6 @@ struct ImmersiveView: View {
     private func updateContent(oldFrames: [Frame], newFrames: [Frame]) {
         DispatchQueue.main.async {
             let oldFrameIDs = Set(oldFrames.map { $0.id })
-            
             let newFrameIDs = Set(newFrames.map { $0.id })
             
             let framesToRemove = oldFrameIDs.subtracting(newFrameIDs)
@@ -65,7 +63,6 @@ struct ImmersiveView: View {
             }
             
             let cubeMesh = MeshResource.generateBox(size: 0.04)
-            
             let cubeMaterial = SimpleMaterial(color: .white, roughness: 1.0, isMetallic: false)
             
             let framesToAdd = newFrameIDs.subtracting(oldFrameIDs)
@@ -77,6 +74,7 @@ struct ImmersiveView: View {
                     
                     for position in frame.positions {
                         let cube = ModelEntity(mesh: cubeMesh, materials: [cubeMaterial])
+                        
                         cube.position = position
                         cube.collision = CollisionComponent(shapes: [ShapeResource.generateBox(size: [0.02, 0.02, 0.02])])
                         

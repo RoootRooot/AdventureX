@@ -15,9 +15,8 @@ struct ContentView: View {
 
     var body: some View {
         RealityView { content in
-            // Add the initial RealityKit content
+            
         } update: { content in
-            // Update the RealityKit content when SwiftUI state changes
             updateContent(with: positionData.frames)
         }
         .toolbar {
@@ -42,7 +41,7 @@ struct ContentView: View {
     }
 
     private func updateContent(with frames: [Frame]) {
-        // Update RealityKit content with the new frames
+        
     }
 
     private func startGeneratingPoints() {
