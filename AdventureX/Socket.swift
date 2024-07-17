@@ -25,8 +25,7 @@ class WebSocketManager: WebSocketDelegate {
     private func connect() {
         var request = URLRequest(url: URL(string: "ws://192.168.43.109:8765")!)
         request.timeoutInterval = 5
-        socket = WebSocket(request: request)
-        socket.delegate = self
+        socket = WebSocket(request: request)    
         socket.connect()
     }
     
@@ -76,5 +75,21 @@ class WebSocketManager: WebSocketDelegate {
         DispatchQueue.global().asyncAfter(deadline: .now() + reconnectDelay) { [weak self] in
             self?.connect()
         }
+    }
+}
+
+struct PointCloud: Mappable {
+    var error: Int?
+    var frameNum: Int?
+    var pointCloud: [[Double]]?
+    var numDetectedPoints: Int?
+    
+    init?(map: Map) {}
+    
+    mutating func mapping(map: Map) {
+        error               <- map["error"]
+        frameNum            <- map["frameNum"]
+        pointCloud          <- map["pointCloud"]
+        numDetectedPoints   <- map["numDetectedPoints"]
     }
 }

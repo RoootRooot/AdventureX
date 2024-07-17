@@ -45,7 +45,7 @@ struct ImmersiveView: View {
     
     private func createBox() {
         let boxMesh = MeshResource.generateBox(size: [1.8, 1.8, 1.8])
-        let boxMaterial = SimpleMaterial(color: .clear, isMetallic: false)
+        let boxMaterial = SimpleMaterial(color: .black.withAlphaComponent(0.45), isMetallic: false)
         
         boxEntity = ModelEntity(mesh: boxMesh, materials: [boxMaterial])
         boxEntity.position = [0, 1, -4]
@@ -53,6 +53,16 @@ struct ImmersiveView: View {
         boxEntity.components[CollisionComponent.self] = CollisionComponent(shapes: [.generateBox(size: [1.8, 1.8, 1.8])])
         boxEntity.components[InputTargetComponent.self] = InputTargetComponent()
         
+        // 创建黑色底座
+        let baseMesh = MeshResource.generateBox(size: [2.0, 0.1, 2.0])
+        let baseMaterial = SimpleMaterial(color: .black, isMetallic: false)
+        let baseEntity = ModelEntity(mesh: baseMesh, materials: [baseMaterial])
+        baseEntity.position = [0, -1, 0]
+        
+        // 将底座添加到 Box 上
+        boxEntity.addChild(baseEntity)
+        
+        // 将 Box 添加到场景锚点
         self.anchor.addChild(boxEntity)
         
         let sphereMesh = MeshResource.generateSphere(radius: 0.3)
@@ -65,12 +75,12 @@ struct ImmersiveView: View {
         // Green sphere for Y
         let greenMaterial = SimpleMaterial(color: .green, isMetallic: false)
         let greenSphere = ModelEntity(mesh: sphereMesh, materials: [greenMaterial])
-        greenSphere.position = [0, 0, -1]
+        greenSphere.position = [0, 1, 0]
         
         // Blue sphere for Z
         let blueMaterial = SimpleMaterial(color: .blue, isMetallic: false)
         let blueSphere = ModelEntity(mesh: sphereMesh, materials: [blueMaterial])
-        blueSphere.position = [0, 1, 0]
+        blueSphere.position = [0, 0, 1]
         
         let whiteMaterial = SimpleMaterial(color: .white, isMetallic: false)
         let whiteSphere = ModelEntity(mesh: sphereMesh, materials: [whiteMaterial])
