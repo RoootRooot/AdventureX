@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1E137EFF2C47E46B00EC5962 /* Starscream in Frameworks */ = {isa = PBXBuildFile; productRef = 1E137EFE2C47E46B00EC5962 /* Starscream */; };
 		1ECE8EA12C4651F900D07977 /* RealityKitContent in Frameworks */ = {isa = PBXBuildFile; productRef = 1ECE8EA02C4651F900D07977 /* RealityKitContent */; };
-		1ECE8EC42C46A0D100D07977 /* SocketIO in Frameworks */ = {isa = PBXBuildFile; productRef = 1ECE8EC32C46A0D100D07977 /* SocketIO */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,7 +36,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1ECE8EA12C4651F900D07977 /* RealityKitContent in Frameworks */,
-				1ECE8EC42C46A0D100D07977 /* SocketIO in Frameworks */,
+				1E137EFF2C47E46B00EC5962 /* Starscream in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -89,7 +89,7 @@
 			name = AdventureX;
 			packageProductDependencies = (
 				1ECE8EA02C4651F900D07977 /* RealityKitContent */,
-				1ECE8EC32C46A0D100D07977 /* SocketIO */,
+				1E137EFE2C47E46B00EC5962 /* Starscream */,
 			);
 			productName = AdventureX;
 			productReference = 1ECE8E9B2C4651F900D07977 /* AdventureX.app */;
@@ -120,7 +120,7 @@
 			);
 			mainGroup = 1ECE8E922C4651F900D07977;
 			packageReferences = (
-				1ECE8EC22C46A0D100D07977 /* XCRemoteSwiftPackageReference "socket.io-client-swift" */,
+				1E137EFD2C47E46B00EC5962 /* XCRemoteSwiftPackageReference "Starscream" */,
 			);
 			productRefGroup = 1ECE8E9C2C4651F900D07977 /* Products */;
 			projectDirPath = "";
@@ -175,6 +175,7 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 7;
+				XROS_DEPLOYMENT_TARGET = 1.0;
 			};
 			name = Debug;
 		};
@@ -201,6 +202,7 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 7;
+				XROS_DEPLOYMENT_TARGET = 1.0;
 			};
 			name = Release;
 		};
@@ -347,25 +349,25 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		1ECE8EC22C46A0D100D07977 /* XCRemoteSwiftPackageReference "socket.io-client-swift" */ = {
+		1E137EFD2C47E46B00EC5962 /* XCRemoteSwiftPackageReference "Starscream" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/socketio/socket.io-client-swift.git";
+			repositoryURL = "https://github.com/daltoniam/Starscream.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 16.1.0;
+				minimumVersion = 4.0.8;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		1E137EFE2C47E46B00EC5962 /* Starscream */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1E137EFD2C47E46B00EC5962 /* XCRemoteSwiftPackageReference "Starscream" */;
+			productName = Starscream;
+		};
 		1ECE8EA02C4651F900D07977 /* RealityKitContent */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = RealityKitContent;
-		};
-		1ECE8EC32C46A0D100D07977 /* SocketIO */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 1ECE8EC22C46A0D100D07977 /* XCRemoteSwiftPackageReference "socket.io-client-swift" */;
-			productName = SocketIO;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

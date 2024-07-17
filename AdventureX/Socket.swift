@@ -5,32 +5,50 @@
 //  Created by GH on 7/17/24.
 //
 
+import Starscream
 import Foundation
-import SocketIO
+import Observation
 
-class NetworkManager {
-    static let shared = NetworkManager()
-    private var manager: SocketManager
-    private var socket: SocketIOClient
+@Observable
+class WebSocketManager: WebSocketDelegate {
+    var socket: WebSocket!
+    var message: String = ""
 
-    private init() {
-        self.manager = SocketManager(socketURL: URL(string: "ws://192.168.43.109:8765")!, config: [.log(true), .compress, .forceWebsockets(true)])
-        self.socket = manager.defaultSocket
-        addHandlers()
+    init() {
+        var request = URLRequest(url: URL(string: "ws://192.168.43.109:8765")!)
+        request.timeoutInterval = 5
+        socket = WebSocket(request: request)
+        socket.delegate = self
         socket.connect()
     }
     
-    private func addHandlers() {
-        socket.on(clientEvent: .connect) { data, ack in
-            print("Socket connected")
+    func didReceive(event: Starscream.WebSocketEvent, client: any Starscream.WebSocketClient) {
+        switch event {
+        case .connected(let headers):
+            print("WebSocket is connected: \(headers)")
+        case .disconnected(let reason, let code):
+            print("WebSocket is disconnected: \(reason) with code: \(code)")
+        case .text(let text):
+            print("Received text: \(text)")
+            DispatchQueue.main.async {
+                self.message = text
+            }
+        case .binary(let data):
+            print("Received data: \(data.count)")
+        case .ping(_):
+            break
+        case .pong(_):
+            break
+        case .viabilityChanged(_):
+            break
+        case .reconnectSuggested(_):
+            break
+        case .cancelled:
+            print("WebSocket cancelled")
+        case .peerClosed:
+            print("peerClosed")
+        case .error(let error):
+            print("WebSocket encountered an error: \(String(describing: error))")
         }
-
-        socket.on(clientEvent: .disconnect) { data, ack in
-            print("Socket disconnected")
-        }
-    }
-    
-    func disconnect() {
-        socket.disconnect()
     }
 }

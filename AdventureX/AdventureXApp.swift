@@ -12,7 +12,9 @@ struct AdventureXApp: App {
     @State private var appModel = AppModel()
     
     init() {
-        NetworkManager.shared
+//        let _ = NetworkManager.shared
+        
+//        socket.connect()
     }
     
     var body: some Scene {
