@@ -21,7 +21,7 @@ struct AdventureXApp: App {
                 .environment(appModel)
                 .environment(PositionData.shared)
         }
-        .windowStyle(.volumetric)
+        .windowStyle(.plain)
         
         ImmersiveSpace(id: appModel.immersiveSpaceID) {
             ImmersiveView()

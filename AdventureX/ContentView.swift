@@ -36,7 +36,7 @@ struct ContentView: View {
     }
 }
 
-#Preview(windowStyle: .volumetric) {
+#Preview(windowStyle: .plain) {
     ContentView()
         .environment(PositionData.shared)
 }
