@@ -30,15 +30,22 @@ class PositionData {
         ringBuffer = RingBuffer(size: frameCount)
     }
     
-    func generateRandomPoints(count: Int) {
+    func generatePoints(from json: [String: Any]) {
         updateQueue.async {
-            let positions = (0..<count).map { _ in
-                SIMD3<Float>(
-                    Float.random(in: -0.9...0.9),
-                    Float.random(in: -0.9...0.9),
-                    Float.random(in: -0.9...0.9)
+            guard let pointCloud = json["pointCloud"] as? [[Double]] else {
+                print("Invalid JSON format")
+                return
+            }
+            
+            let positions: [SIMD3<Float>] = pointCloud.compactMap {
+                guard $0.count >= 3 else { return nil }
+                return SIMD3<Float>(
+                    Float($0[0]),
+                    Float($0[1]),
+                    Float($0[2])
                 )
             }
+            
             let frame = Frame(positions: positions)
             self.ringBuffer.write(frame)
             

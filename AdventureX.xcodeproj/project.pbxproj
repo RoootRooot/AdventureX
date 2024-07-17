@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1E137EFF2C47E46B00EC5962 /* Starscream in Frameworks */ = {isa = PBXBuildFile; productRef = 1E137EFE2C47E46B00EC5962 /* Starscream */; };
+		1E137F022C47E70400EC5962 /* ObjectMapper in Frameworks */ = {isa = PBXBuildFile; productRef = 1E137F012C47E70400EC5962 /* ObjectMapper */; };
 		1ECE8EA12C4651F900D07977 /* RealityKitContent in Frameworks */ = {isa = PBXBuildFile; productRef = 1ECE8EA02C4651F900D07977 /* RealityKitContent */; };
 /* End PBXBuildFile section */
 
@@ -35,6 +36,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1E137F022C47E70400EC5962 /* ObjectMapper in Frameworks */,
 				1ECE8EA12C4651F900D07977 /* RealityKitContent in Frameworks */,
 				1E137EFF2C47E46B00EC5962 /* Starscream in Frameworks */,
 			);
@@ -90,6 +92,7 @@
 			packageProductDependencies = (
 				1ECE8EA02C4651F900D07977 /* RealityKitContent */,
 				1E137EFE2C47E46B00EC5962 /* Starscream */,
+				1E137F012C47E70400EC5962 /* ObjectMapper */,
 			);
 			productName = AdventureX;
 			productReference = 1ECE8E9B2C4651F900D07977 /* AdventureX.app */;
@@ -121,6 +124,7 @@
 			mainGroup = 1ECE8E922C4651F900D07977;
 			packageReferences = (
 				1E137EFD2C47E46B00EC5962 /* XCRemoteSwiftPackageReference "Starscream" */,
+				1E137F002C47E70400EC5962 /* XCRemoteSwiftPackageReference "ObjectMapper" */,
 			);
 			productRefGroup = 1ECE8E9C2C4651F900D07977 /* Products */;
 			projectDirPath = "";
@@ -357,6 +361,14 @@
 				minimumVersion = 4.0.8;
 			};
 		};
+		1E137F002C47E70400EC5962 /* XCRemoteSwiftPackageReference "ObjectMapper" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/tristanhimmelman/ObjectMapper.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.4.3;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -364,6 +376,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 1E137EFD2C47E46B00EC5962 /* XCRemoteSwiftPackageReference "Starscream" */;
 			productName = Starscream;
+		};
+		1E137F012C47E70400EC5962 /* ObjectMapper */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1E137F002C47E70400EC5962 /* XCRemoteSwiftPackageReference "ObjectMapper" */;
+			productName = ObjectMapper;
 		};
 		1ECE8EA02C4651F900D07977 /* RealityKitContent */ = {
 			isa = XCSwiftPackageProductDependency;
