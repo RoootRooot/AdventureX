@@ -29,9 +29,11 @@ struct AdventureXApp: App {
                 .environment(PositionData.shared)
                 .onAppear {
                     appModel.immersiveSpaceState = .open
+                    WebSocketManager.shared.socket.connect()
                 }
                 .onDisappear {
                     appModel.immersiveSpaceState = .closed
+                    WebSocketManager.shared.socket.disconnect()
                 }
         }
         .immersionStyle(selection: .constant(.mixed), in: .mixed)
