@@ -44,8 +44,8 @@ class PositionData {
                 guard $0.count >= 3 else { return nil }
                 return SIMD3<Float>(
                     Float($0[0]),
-                    Float($0[1]),
-                    Float($0[2])
+                    Float($0[2]),
+                    Float($0[1])
                 )
             }
             
@@ -56,7 +56,6 @@ class PositionData {
             DispatchQueue.main.async {
                 self.frames = frames
                 self.removeOldestFrame()
-                print("Generated frame \(frame.frameNum) with \(frame.positions.count) positions")
             }
         }
     }
@@ -114,29 +113,3 @@ class RingBuffer<T> {
         return buffer[(writeIndex + size - 1) % size]
     }
 }
-
-//{
-//    "error": 0,
-//    "frameNum": 378,
-//    "pointCloud": [
-//        [
-//            6.587018726512154,
-//            3.485026624592355,
-//            1.0662452587170637,
-//            0.0,
-//            24.0,
-//            38.6,
-//            255.0
-//        ],
-//        [
-//            6.710140673460906,
-//            3.606407398236248,
-//            0.881641003247777,
-//            -0.1471865475177765,
-//            20.6,
-//            39.0,
-//            255.0
-//        ]
-//    ],
-//    "numDetectedPoints": 12
-//}

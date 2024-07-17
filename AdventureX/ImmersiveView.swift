@@ -54,6 +54,32 @@ struct ImmersiveView: View {
         boxEntity.components[InputTargetComponent.self] = InputTargetComponent()
         
         self.anchor.addChild(boxEntity)
+        
+        let sphereMesh = MeshResource.generateSphere(radius: 0.3)
+        
+        // Red sphere for X
+        let redMaterial = SimpleMaterial(color: .red, isMetallic: false)
+        let redSphere = ModelEntity(mesh: sphereMesh, materials: [redMaterial])
+        redSphere.position = [1, 0, 0]
+        
+        // Green sphere for Y
+        let greenMaterial = SimpleMaterial(color: .green, isMetallic: false)
+        let greenSphere = ModelEntity(mesh: sphereMesh, materials: [greenMaterial])
+        greenSphere.position = [0, 0, -1]
+        
+        // Blue sphere for Z
+        let blueMaterial = SimpleMaterial(color: .blue, isMetallic: false)
+        let blueSphere = ModelEntity(mesh: sphereMesh, materials: [blueMaterial])
+        blueSphere.position = [0, 1, 0]
+        
+        let whiteMaterial = SimpleMaterial(color: .white, isMetallic: false)
+        let whiteSphere = ModelEntity(mesh: sphereMesh, materials: [whiteMaterial])
+        whiteSphere.position = [0, 0, 0]
+        
+        boxEntity.addChild(whiteSphere)
+        boxEntity.addChild(redSphere)
+        boxEntity.addChild(greenSphere)
+        boxEntity.addChild(blueSphere)
     }
     
     private func clearBox() {
@@ -102,6 +128,11 @@ struct ImmersiveView: View {
                         self.boxEntity.addChild(entity)
                     }
                     
+                    let dateFormatter = DateFormatter()
+                    dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSS"
+                    let formattedDate = dateFormatter.string(from: Date())
+                    print(formattedDate, frame.frameNum)
+                    
                     self.pointEntities[frame.id] = entities
                 }
             }
@@ -109,7 +140,7 @@ struct ImmersiveView: View {
     }
 }
 
-//#Preview(immersionStyle: .mixed) {
-//    ImmersiveView()
-//        .environment(PositionData.shared)
-//}
+#Preview(immersionStyle: .mixed) {
+    ImmersiveView()
+        .environment(PositionData.shared)
+}

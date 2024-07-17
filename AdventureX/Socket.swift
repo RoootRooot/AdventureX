@@ -32,7 +32,7 @@ class WebSocketManager: WebSocketDelegate {
         case .disconnected(let reason, let code):
             print("WebSocket is disconnected: \(reason) with code: \(code)")
         case .text(let text):
-            print(text)
+//            print(text)
             
             DispatchQueue.main.async {
                 self.message = text
@@ -61,6 +61,7 @@ class WebSocketManager: WebSocketDelegate {
         }
     }
 }
+
 struct PointCloud: Mappable {
     var error: Int?
     var frameNum: Int?
