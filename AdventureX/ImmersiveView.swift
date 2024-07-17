@@ -32,12 +32,20 @@ struct ImmersiveView: View {
         }
         .onDisappear {
             clearBox()
+            isBoxCreated = false
         }
         .onChange(of: positionData.frames) { oldFrames, newFrames in
             DispatchQueue.global(qos: .userInitiated).async {
                 self.updateContent(oldFrames: oldFrames, newFrames: newFrames)
             }
         }
+        .gesture(
+            DragGesture().onChanged { value in
+                let translation = value.translation
+                let newRotation = simd_quatf(angle: Float(translation.width / 360), axis: [0, 1, 0])
+                boxEntity.transform.rotation = newRotation
+            }
+        )
     }
     
     private func createBox() {
@@ -47,13 +55,17 @@ struct ImmersiveView: View {
         boxEntity = ModelEntity(mesh: boxMesh, materials: [boxMaterial])
         boxEntity.position = [0, 1, -4]
         
+        boxEntity.components[CollisionComponent.self] = CollisionComponent(shapes: [.generateBox(size: [1.8, 1.8, 1.8])])
+        boxEntity.components[InputTargetComponent.self] = InputTargetComponent()
+        
         self.anchor.addChild(boxEntity)
     }
     
     private func clearBox() {
+        boxEntity.removeFromParent()
         for (_, entities) in pointEntities {
             for entity in entities {
-                boxEntity.removeChild(entity)
+                entity.removeFromParent()
             }
         }
         pointEntities.removeAll()

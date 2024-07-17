@@ -23,7 +23,7 @@ struct ContentView: View {
             ToolbarItemGroup(placement: .bottomOrnament) {
                 VStack {
                     ToggleImmersiveSpaceButton()
-
+                    
                     Button(isGeneratingPoints ? "Stop Generating Points" : "Start Generating Points") {
                         isGeneratingPoints.toggle()
                         if isGeneratingPoints {
