@@ -23,15 +23,6 @@ struct ContentView: View {
             ToolbarItemGroup(placement: .bottomOrnament) {
                 VStack {
                     ToggleImmersiveSpaceButton()
-                    
-                    Button(isGeneratingPoints ? "Stop Generating Points" : "Start Generating Points") {
-                        isGeneratingPoints.toggle()
-                        if isGeneratingPoints {
-                            startGeneratingPoints()
-                        } else {
-                            stopGeneratingPoints()
-                        }
-                    }
                 }
             }
         }
@@ -43,20 +34,9 @@ struct ContentView: View {
     private func updateContent(with frames: [Frame]) {
         
     }
-
-    private func startGeneratingPoints() {
-        timer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { _ in
-            positionData.generateRandomPoints(count: 50)
-        }
-    }
-
-    private func stopGeneratingPoints() {
-        timer?.invalidate()
-        timer = nil
-    }
 }
 
-#Preview(windowStyle: .volumetric) {
-    ContentView()
-        .environment(PositionData.shared)
-}
+//#Preview(windowStyle: .volumetric) {
+//    ContentView()
+//        .environment(PositionData.shared)
+//}

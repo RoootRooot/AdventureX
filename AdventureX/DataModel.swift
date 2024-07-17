@@ -10,11 +10,12 @@ import Foundation
 import Observation
 
 struct Frame: Equatable, Identifiable {
-    let id = UUID()
+    let id: UUID
+    let frameNum: Int
     let positions: [SIMD3<Float>] // 3D 浮点数向量
     
     static func ==(lhs: Frame, rhs: Frame) -> Bool {
-        return lhs.id == rhs.id
+        return lhs.frameNum == rhs.frameNum
     }
 }
 
@@ -32,8 +33,10 @@ class PositionData {
     
     func generatePoints(from json: [String: Any]) {
         updateQueue.async {
-            guard let pointCloud = json["pointCloud"] as? [[Double]] else {
-                print("Invalid JSON format")
+            guard let pointCloudData = PointCloud(JSON: json),
+                  let pointCloud = pointCloudData.pointCloud,
+                  let frameNum = pointCloudData.frameNum else {
+                print("Invalid JSON format or missing pointCloud data")
                 return
             }
             
@@ -46,14 +49,14 @@ class PositionData {
                 )
             }
             
-            let frame = Frame(positions: positions)
+            let frame = Frame(id: UUID(), frameNum: frameNum, positions: positions)
             self.ringBuffer.write(frame)
             
             let frames = self.ringBuffer.read()
             DispatchQueue.main.async {
                 self.frames = frames
                 self.removeOldestFrame()
-                print("Generated frame with \(frame.positions.count) positions")
+                print("Generated frame \(frame.frameNum) with \(frame.positions.count) positions")
             }
         }
     }
@@ -111,7 +114,6 @@ class RingBuffer<T> {
         return buffer[(writeIndex + size - 1) % size]
     }
 }
-
 
 //{
 //    "error": 0,

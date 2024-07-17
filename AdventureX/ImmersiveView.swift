@@ -24,10 +24,6 @@ struct ImmersiveView: View {
                 createBox()
                 isBoxCreated = true
             }
-            
-            DispatchQueue.global(qos: .userInitiated).async {
-                positionData.generateRandomPoints(count: 50)
-            }
         }
         .onDisappear {
             clearBox()
@@ -86,7 +82,7 @@ struct ImmersiveView: View {
             }
             
             let cubeMesh = MeshResource.generateBox(size: 0.04)
-            let cubeMaterial = SimpleMaterial(color: .white, roughness: 1.0, isMetallic: false)
+            let cubeMaterial = SimpleMaterial(color: .red, roughness: 1.0, isMetallic: false)
             
             let framesToAdd = newFrameIDs.subtracting(oldFrameIDs)
             
@@ -113,7 +109,7 @@ struct ImmersiveView: View {
     }
 }
 
-#Preview(immersionStyle: .mixed) {
-    ImmersiveView()
-        .environment(PositionData.shared)
-}
+//#Preview(immersionStyle: .mixed) {
+//    ImmersiveView()
+//        .environment(PositionData.shared)
+//}

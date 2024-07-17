@@ -11,6 +11,10 @@ import SwiftUI
 struct AdventureXApp: App {
     @State private var appModel = AppModel()
     
+    init() {
+        WebSocketManager.shared
+    }
+    
     var body: some Scene {
         WindowGroup {
             ContentView()

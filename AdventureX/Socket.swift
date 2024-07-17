@@ -8,13 +8,16 @@
 import Starscream
 import Foundation
 import Observation
+import ObjectMapper
 
 @Observable
 class WebSocketManager: WebSocketDelegate {
+    static let shared = WebSocketManager()
+    
     var socket: WebSocket!
     var message: String = ""
 
-    init() {
+    private init() {
         var request = URLRequest(url: URL(string: "ws://192.168.43.109:8765")!)
         request.timeoutInterval = 5
         socket = WebSocket(request: request)
@@ -29,9 +32,15 @@ class WebSocketManager: WebSocketDelegate {
         case .disconnected(let reason, let code):
             print("WebSocket is disconnected: \(reason) with code: \(code)")
         case .text(let text):
-            print("Received text: \(text)")
+            print(text)
+            
             DispatchQueue.main.async {
                 self.message = text
+                
+                if let json = text.data(using: .utf8),
+                   let jsonObject = try? JSONSerialization.jsonObject(with: json, options: []) as? [String: Any] {
+                    PositionData.shared.generatePoints(from: jsonObject)
+                }
             }
         case .binary(let data):
             print("Received data: \(data.count)")
@@ -50,5 +59,20 @@ class WebSocketManager: WebSocketDelegate {
         case .error(let error):
             print("WebSocket encountered an error: \(String(describing: error))")
         }
+    }
+}
+struct PointCloud: Mappable {
+    var error: Int?
+    var frameNum: Int?
+    var pointCloud: [[Double]]?
+    var numDetectedPoints: Int?
+    
+    init?(map: Map) {}
+    
+    mutating func mapping(map: Map) {
+        error               <- map["error"]
+        frameNum            <- map["frameNum"]
+        pointCloud          <- map["pointCloud"]
+        numDetectedPoints   <- map["numDetectedPoints"]
     }
 }
