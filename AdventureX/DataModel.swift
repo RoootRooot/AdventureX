@@ -33,6 +33,7 @@ class PositionData {
     
     func generatePoints(from json: [String: Any]) {
         updateQueue.async {
+            // 提取 JSON 字段参考自 ChatGPT
             guard let pointCloudData = PointCloud(JSON: json),
                   let pointCloud = pointCloudData.pointCloud,
                   let frameNum = pointCloudData.frameNum else {
@@ -45,7 +46,7 @@ class PositionData {
                 return SIMD3<Float>(
                     Float($0[0]),
                     Float($0[2]),
-                    Float($0[1])
+                    -Float($0[1])
                 )
             }
             
@@ -76,6 +77,7 @@ class PositionData {
     }
 }
 
+// 环形缓冲区参考自 ChatGPT
 class RingBuffer<T> {
     private var buffer: [T?]
     private var readIndex = 0

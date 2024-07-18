@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		1E137EFF2C47E46B00EC5962 /* Starscream in Frameworks */ = {isa = PBXBuildFile; productRef = 1E137EFE2C47E46B00EC5962 /* Starscream */; };
 		1E137F022C47E70400EC5962 /* ObjectMapper in Frameworks */ = {isa = PBXBuildFile; productRef = 1E137F012C47E70400EC5962 /* ObjectMapper */; };
-		1ECE8EA12C4651F900D07977 /* RealityKitContent in Frameworks */ = {isa = PBXBuildFile; productRef = 1ECE8EA02C4651F900D07977 /* RealityKitContent */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -37,7 +36,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				1E137F022C47E70400EC5962 /* ObjectMapper in Frameworks */,
-				1ECE8EA12C4651F900D07977 /* RealityKitContent in Frameworks */,
 				1E137EFF2C47E46B00EC5962 /* Starscream in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -90,7 +88,6 @@
 			);
 			name = AdventureX;
 			packageProductDependencies = (
-				1ECE8EA02C4651F900D07977 /* RealityKitContent */,
 				1E137EFE2C47E46B00EC5962 /* Starscream */,
 				1E137F012C47E70400EC5962 /* ObjectMapper */,
 			);
@@ -381,10 +378,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 1E137F002C47E70400EC5962 /* XCRemoteSwiftPackageReference "ObjectMapper" */;
 			productName = ObjectMapper;
-		};
-		1ECE8EA02C4651F900D07977 /* RealityKitContent */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = RealityKitContent;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

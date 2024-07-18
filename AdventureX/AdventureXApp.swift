@@ -12,9 +12,9 @@ struct AdventureXApp: App {
     @State private var appModel = AppModel()
     @State private var rotationAngle: Float = 0.0
     
-    init() {
-        WebSocketManager.shared
-    }
+//    init() {
+//        WebSocketManager.shared
+//    }
     
     var body: some Scene {
         WindowGroup {

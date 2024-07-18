@@ -73,24 +73,24 @@ struct ImmersiveView: View {
         
         let sphereMesh = MeshResource.generateSphere(radius: 0.3)
         
-        // Red sphere for X
-        let redMaterial = SimpleMaterial(color: .red, isMetallic: false)
-        let redSphere = ModelEntity(mesh: sphereMesh, materials: [redMaterial])
-        redSphere.position = [1, 0, 0]
-        
-        // Green sphere for Y
-        let greenMaterial = SimpleMaterial(color: .green, isMetallic: false)
-        let greenSphere = ModelEntity(mesh: sphereMesh, materials: [greenMaterial])
-        greenSphere.position = [0, 1, 0]
-        
-        // Blue sphere for Z
-        let blueMaterial = SimpleMaterial(color: .blue, isMetallic: false)
-        let blueSphere = ModelEntity(mesh: sphereMesh, materials: [blueMaterial])
-        blueSphere.position = [0, 0, 1]
-        
-        boxEntity.addChild(redSphere)
-        boxEntity.addChild(greenSphere)
-        boxEntity.addChild(blueSphere)
+//        // Red sphere for X
+//        let redMaterial = SimpleMaterial(color: .red, isMetallic: false)
+//        let redSphere = ModelEntity(mesh: sphereMesh, materials: [redMaterial])
+//        redSphere.position = [1, 0, 0]
+//        
+//        // Green sphere for Y
+//        let greenMaterial = SimpleMaterial(color: .green, isMetallic: false)
+//        let greenSphere = ModelEntity(mesh: sphereMesh, materials: [greenMaterial])
+//        greenSphere.position = [0, 0, -1]
+//        
+//        // Blue sphere for Z
+//        let blueMaterial = SimpleMaterial(color: .blue, isMetallic: false)
+//        let blueSphere = ModelEntity(mesh: sphereMesh, materials: [blueMaterial])
+//        blueSphere.position = [0, 1, 0]
+//        
+//        boxEntity.addChild(redSphere)
+//        boxEntity.addChild(greenSphere)
+//        boxEntity.addChild(blueSphere)
     }
     
     private func rotateBox(to newAngle: Float) {
@@ -129,6 +129,7 @@ struct ImmersiveView: View {
             
             let framesToAdd = newFrameIDs.subtracting(oldFrameIDs)
             
+            // Frame 添加机制参考自 ChatGPT
             for frame in newFrames {
                 if framesToAdd.contains(frame.id) {
                     var entities = [ModelEntity]()
