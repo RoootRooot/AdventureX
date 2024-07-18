@@ -40,7 +40,11 @@ class PositionData {
             guard let frameNum = json["frameNum"].int,
                   let pointCloud = json["pointCloud"].array,
                   let trackIndexes = json["trackIndexes"].array else {
-                print("Invalid JSON format or missing pointCloud data")
+                      if !self.frames.isEmpty {
+                          DispatchQueue.main.async {
+                              self.frames.removeLast()
+                          }
+                      }
                 return
             }
             
@@ -49,7 +53,7 @@ class PositionData {
                 let coordinates = SIMD3<Float>(
                     Float(point[0].doubleValue),
                     Float(point[2].doubleValue),
-                    -Float(point[1].doubleValue)
+                    -Float(point[1].doubleValue) + 1.8
                 )
                 
                 let snr = point[4].intValue

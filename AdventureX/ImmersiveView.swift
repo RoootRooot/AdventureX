@@ -68,7 +68,7 @@ struct ImmersiveView: View {
 
         boxEntity.components[CollisionComponent.self] = CollisionComponent(shapes: [.generateBox(size: [1.8, 1.8, 1.8])])
         boxEntity.components[InputTargetComponent.self] = InputTargetComponent()
-        
+
         self.anchor.addChild(boxEntity)
         
         let baseMesh = MeshResource.generateBox(size: [2, 0.1, 2])

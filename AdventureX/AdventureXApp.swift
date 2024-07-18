@@ -10,7 +10,7 @@ import SwiftUI
 @main
 struct AdventureXApp: App {
     @State private var appModel = AppModel()
-    @State private var rotationAngle: Float = 0.0
+    @State private var rotationAngle: Float = 0
     
     var body: some Scene {
         WindowGroup {
