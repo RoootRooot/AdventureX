@@ -16,7 +16,7 @@ struct ImmersiveView: View {
     @State private var isBoxCreated = false
     @State private var currentScale: Float = 1.0
     @State private var currentRotation: simd_quatf = simd_quatf(angle: 0, axis: [0, 1, 0])
-    @State private var currentPosition: SIMD3<Float> = [0, 1, -4]
+    @State private var currentPosition: SIMD3<Float> = [0, 1, -3]
     
     @Binding var rotationAngle: Float
     
@@ -61,18 +61,24 @@ struct ImmersiveView: View {
     
     private func createBox() {
         let boxMesh = MeshResource.generateBox(size: [1.8, 1.8, 1.8])
-        let boxMaterial = SimpleMaterial(color: .clear, isMetallic: false)
+        let boxMaterial = SimpleMaterial(color: .white.withAlphaComponent(0.15), isMetallic: false)
         
         boxEntity = ModelEntity(mesh: boxMesh, materials: [boxMaterial])
-        boxEntity.position = [0, 1, -4]
-        
+        boxEntity.position = [0, 1, -3]
+
         boxEntity.components[CollisionComponent.self] = CollisionComponent(shapes: [.generateBox(size: [1.8, 1.8, 1.8])])
         boxEntity.components[InputTargetComponent.self] = InputTargetComponent()
         
         self.anchor.addChild(boxEntity)
         
-        let sphereMesh = MeshResource.generateSphere(radius: 0.3)
+        let baseMesh = MeshResource.generateBox(size: [2, 0.1, 2])
+        let baseMaterial = UnlitMaterial(color: .gray.withAlphaComponent(0.45), applyPostProcessToneMap: true)
+        let baseEntity = ModelEntity(mesh: baseMesh, materials: [baseMaterial])
         
+        baseEntity.position = [0, -0.95, 0]  // 将底座放在 Box 的下方
+        boxEntity.addChild(baseEntity)
+        
+//        let sphereMesh = MeshResource.generateSphere(radius: 0.3)
 //        // Red sphere for X
 //        let redMaterial = SimpleMaterial(color: .red, isMetallic: false)
 //        let redSphere = ModelEntity(mesh: sphereMesh, materials: [redMaterial])
