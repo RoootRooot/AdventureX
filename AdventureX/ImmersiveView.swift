@@ -14,6 +14,11 @@ struct ImmersiveView: View {
     @State private var boxEntity = ModelEntity()
     @State private var pointEntities: [UUID: [ModelEntity]] = [:]
     @State private var isBoxCreated = false
+    @State private var currentScale: Float = 1.0
+    @State private var currentRotation: simd_quatf = simd_quatf(angle: 0, axis: [0, 1, 0])
+    @State private var currentPosition: SIMD3<Float> = [0, 1, -4]
+    
+    @Binding var rotationAngle: Float
     
     var body: some View {
         RealityView { content in
@@ -34,18 +39,29 @@ struct ImmersiveView: View {
                 self.updateContent(oldFrames: oldFrames, newFrames: newFrames)
             }
         }
+        .onChange(of: rotationAngle) { newAngle in
+            rotateBox(to: newAngle)
+        }
         .gesture(
-            DragGesture().onChanged { value in
-                let translation = value.translation
-                let newRotation = simd_quatf(angle: Float(translation.width / 360), axis: [0, 1, 0])
-                boxEntity.transform.rotation = newRotation
-            }
+            SimultaneousGesture(
+                DragGesture().onChanged { value in
+                    let translation = value.translation
+                    currentPosition.x += Float(translation.width) * 0.00005
+                    currentPosition.y -= Float(translation.height) * 0.00005
+                    boxEntity.position = currentPosition
+                },
+                MagnificationGesture().onChanged { value in
+                    let scaleDelta = Float(value.magnitude - 1.0) * 0.1 + 1.0
+                    currentScale *= scaleDelta
+                    boxEntity.scale = [currentScale, currentScale, currentScale]
+                }
+            )
         )
     }
     
     private func createBox() {
         let boxMesh = MeshResource.generateBox(size: [1.8, 1.8, 1.8])
-        let boxMaterial = SimpleMaterial(color: .black.withAlphaComponent(0.45), isMetallic: false)
+        let boxMaterial = SimpleMaterial(color: .clear, isMetallic: false)
         
         boxEntity = ModelEntity(mesh: boxMesh, materials: [boxMaterial])
         boxEntity.position = [0, 1, -4]
@@ -53,16 +69,6 @@ struct ImmersiveView: View {
         boxEntity.components[CollisionComponent.self] = CollisionComponent(shapes: [.generateBox(size: [1.8, 1.8, 1.8])])
         boxEntity.components[InputTargetComponent.self] = InputTargetComponent()
         
-        // 创建黑色底座
-        let baseMesh = MeshResource.generateBox(size: [2.0, 0.1, 2.0])
-        let baseMaterial = SimpleMaterial(color: .black, isMetallic: false)
-        let baseEntity = ModelEntity(mesh: baseMesh, materials: [baseMaterial])
-        baseEntity.position = [0, -1, 0]
-        
-        // 将底座添加到 Box 上
-        boxEntity.addChild(baseEntity)
-        
-        // 将 Box 添加到场景锚点
         self.anchor.addChild(boxEntity)
         
         let sphereMesh = MeshResource.generateSphere(radius: 0.3)
@@ -82,14 +88,15 @@ struct ImmersiveView: View {
         let blueSphere = ModelEntity(mesh: sphereMesh, materials: [blueMaterial])
         blueSphere.position = [0, 0, 1]
         
-        let whiteMaterial = SimpleMaterial(color: .white, isMetallic: false)
-        let whiteSphere = ModelEntity(mesh: sphereMesh, materials: [whiteMaterial])
-        whiteSphere.position = [0, 0, 0]
-        
-        boxEntity.addChild(whiteSphere)
         boxEntity.addChild(redSphere)
         boxEntity.addChild(greenSphere)
         boxEntity.addChild(blueSphere)
+    }
+    
+    private func rotateBox(to newAngle: Float) {
+        let rotationDelta = simd_quatf(angle: newAngle, axis: [0, 1, 0])
+        currentRotation = rotationDelta
+        boxEntity.transform.rotation = currentRotation
     }
     
     private func clearBox() {
@@ -118,7 +125,7 @@ struct ImmersiveView: View {
             }
             
             let cubeMesh = MeshResource.generateBox(size: 0.04)
-            let cubeMaterial = SimpleMaterial(color: .red, roughness: 1.0, isMetallic: false)
+            let cubeMaterial = SimpleMaterial(color: .white, roughness: 1.0, isMetallic: false)
             
             let framesToAdd = newFrameIDs.subtracting(oldFrameIDs)
             
@@ -138,11 +145,6 @@ struct ImmersiveView: View {
                         self.boxEntity.addChild(entity)
                     }
                     
-                    let dateFormatter = DateFormatter()
-                    dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSS"
-                    let formattedDate = dateFormatter.string(from: Date())
-                    print(formattedDate, frame.frameNum)
-                    
                     self.pointEntities[frame.id] = entities
                 }
             }
@@ -151,6 +153,6 @@ struct ImmersiveView: View {
 }
 
 #Preview(immersionStyle: .mixed) {
-    ImmersiveView()
+    ImmersiveView(rotationAngle: .constant(0))
         .environment(PositionData.shared)
 }

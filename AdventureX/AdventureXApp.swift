@@ -10,6 +10,7 @@ import SwiftUI
 @main
 struct AdventureXApp: App {
     @State private var appModel = AppModel()
+    @State private var rotationAngle: Float = 0.0
     
     init() {
         WebSocketManager.shared
@@ -17,14 +18,14 @@ struct AdventureXApp: App {
     
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView(rotationAngle: $rotationAngle)
                 .environment(appModel)
                 .environment(PositionData.shared)
         }
         .windowStyle(.plain)
         
         ImmersiveSpace(id: appModel.immersiveSpaceID) {
-            ImmersiveView()
+            ImmersiveView(rotationAngle: $rotationAngle)
                 .environment(appModel)
                 .environment(PositionData.shared)
                 .onAppear {
