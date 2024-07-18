@@ -8,6 +8,8 @@
 import simd
 import Foundation
 import Observation
+import Alamofire
+import SwiftyJSON
 
 struct Frame: Equatable, Identifiable {
     let id: UUID
@@ -113,5 +115,28 @@ class RingBuffer<T> {
     
     func latest() -> T? {
         return buffer[(writeIndex + size - 1) % size]
+    }
+}
+
+@Observable
+class HeartBeatModel {
+    var heartRate: Int = 0
+    var breathRate: Int = 0
+    
+    func fetchHeartBeatData(heartbeatData: HeartBeatModel) {
+        let url = ""
+        
+        AF.request(url).response { response in
+            switch response.result {
+            case .success(let value):
+                let json = JSON(value)
+                
+                self.heartRate = json["HeartRate"].intValue
+                self.breathRate = json["BreathRate"].intValue
+                
+            case .failure(let error):
+                print("Error: \(error)")
+            }
+        }
     }
 }

@@ -15,28 +15,41 @@ class WebSocketManager: WebSocketDelegate {
     static let shared = WebSocketManager()
     
     var socket: WebSocket!
-    var message: String = ""
-
+    private var reconnectTimer: Timer?
+    private var isConnected: Bool = false
+    
     private init() {
         var request = URLRequest(url: URL(string: "ws://192.168.43.131:8765")!)
         request.timeoutInterval = 5
         socket = WebSocket(request: request)
         socket.delegate = self
-        socket.connect()
+        connect()
+    }
+    
+    func connect() {
+        if !isConnected {
+            socket.connect()
+        }
+    }
+    
+    func disconnect() {
+        isConnected = false
+        reconnectTimer?.invalidate()
+        socket.disconnect()
     }
     
     func didReceive(event: Starscream.WebSocketEvent, client: any Starscream.WebSocketClient) {
         switch event {
         case .connected(let headers):
+            isConnected = true
+            reconnectTimer?.invalidate()
             print("WebSocket is connected: \(headers)")
         case .disconnected(let reason, let code):
+            isConnected = false
             print("WebSocket is disconnected: \(reason) with code: \(code)")
+            scheduleReconnect()
         case .text(let text):
-//            print(text)
-            
             DispatchQueue.main.async {
-                self.message = text
-                
                 if let json = text.data(using: .utf8),
                    let jsonObject = try? JSONSerialization.jsonObject(with: json, options: []) as? [String: Any] {
                     PositionData.shared.generatePoints(from: jsonObject)
@@ -51,13 +64,26 @@ class WebSocketManager: WebSocketDelegate {
         case .viabilityChanged(_):
             break
         case .reconnectSuggested(_):
-            break
+            scheduleReconnect()
         case .cancelled:
+            isConnected = false
             print("WebSocket cancelled")
+            scheduleReconnect()
         case .peerClosed:
-            print("peerClosed")
+            isConnected = false
+            print("Peer closed connection")
+            scheduleReconnect()
         case .error(let error):
+            isConnected = false
             print("WebSocket encountered an error: \(String(describing: error))")
+            scheduleReconnect()
+        }
+    }
+    
+    private func scheduleReconnect() {
+        reconnectTimer?.invalidate()
+        reconnectTimer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: false) { [weak self] _ in
+            self?.connect()
         }
     }
 }

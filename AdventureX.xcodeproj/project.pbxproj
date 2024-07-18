@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		1E137EFF2C47E46B00EC5962 /* Starscream in Frameworks */ = {isa = PBXBuildFile; productRef = 1E137EFE2C47E46B00EC5962 /* Starscream */; };
 		1E137F022C47E70400EC5962 /* ObjectMapper in Frameworks */ = {isa = PBXBuildFile; productRef = 1E137F012C47E70400EC5962 /* ObjectMapper */; };
+		1ED247E52C494A410080B03D /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 1ED247E42C494A410080B03D /* Alamofire */; };
+		1ED247FD2C494D600080B03D /* SwiftyJSON in Frameworks */ = {isa = PBXBuildFile; productRef = 1ED247FC2C494D600080B03D /* SwiftyJSON */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,7 +37,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1ED247E52C494A410080B03D /* Alamofire in Frameworks */,
 				1E137F022C47E70400EC5962 /* ObjectMapper in Frameworks */,
+				1ED247FD2C494D600080B03D /* SwiftyJSON in Frameworks */,
 				1E137EFF2C47E46B00EC5962 /* Starscream in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -90,6 +94,8 @@
 			packageProductDependencies = (
 				1E137EFE2C47E46B00EC5962 /* Starscream */,
 				1E137F012C47E70400EC5962 /* ObjectMapper */,
+				1ED247E42C494A410080B03D /* Alamofire */,
+				1ED247FC2C494D600080B03D /* SwiftyJSON */,
 			);
 			productName = AdventureX;
 			productReference = 1ECE8E9B2C4651F900D07977 /* AdventureX.app */;
@@ -122,6 +128,8 @@
 			packageReferences = (
 				1E137EFD2C47E46B00EC5962 /* XCRemoteSwiftPackageReference "Starscream" */,
 				1E137F002C47E70400EC5962 /* XCRemoteSwiftPackageReference "ObjectMapper" */,
+				1ED247E32C494A410080B03D /* XCRemoteSwiftPackageReference "Alamofire" */,
+				1ED247FB2C494D600080B03D /* XCRemoteSwiftPackageReference "SwiftyJSON" */,
 			);
 			productRefGroup = 1ECE8E9C2C4651F900D07977 /* Products */;
 			projectDirPath = "";
@@ -366,6 +374,22 @@
 				minimumVersion = 4.4.3;
 			};
 		};
+		1ED247E32C494A410080B03D /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.9.1;
+			};
+		};
+		1ED247FB2C494D600080B03D /* XCRemoteSwiftPackageReference "SwiftyJSON" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SwiftyJSON/SwiftyJSON.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.2;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -378,6 +402,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 1E137F002C47E70400EC5962 /* XCRemoteSwiftPackageReference "ObjectMapper" */;
 			productName = ObjectMapper;
+		};
+		1ED247E42C494A410080B03D /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1ED247E32C494A410080B03D /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
+		};
+		1ED247FC2C494D600080B03D /* SwiftyJSON */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1ED247FB2C494D600080B03D /* XCRemoteSwiftPackageReference "SwiftyJSON" */;
+			productName = SwiftyJSON;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

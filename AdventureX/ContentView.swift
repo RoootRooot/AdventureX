@@ -14,47 +14,64 @@ struct ContentView: View {
     @State private var timer: Timer?
     @Binding var rotationAngle: Float
     @State private var rotationTimer: Timer?
-
+    @State private var selectedView: DisplayView = .content
+    @State var heabert: Int = 0
+    
     var body: some View {
         RealityView { content in
             
         } update: { content in
-            updateContent(with: positionData.frames)
+            
         }
         .toolbar {
             ToolbarItemGroup(placement: .bottomOrnament) {
                 VStack {
-                    ToggleImmersiveSpaceButton()
-                    HStack {
-                        Button {
-                            toggleRotatingLeft()
-                        } label: {
-                            VStack {
-                                Image(systemName: "rotate.left")
-                                    .font(.title)
-                                Text("左旋转")
-                                    .font(.caption)
-                            }
-                        }
-                        
-                        Spacer()
-                        
-                        Button {
-                            toggleRotatingRight()
-                        } label: {
-                            VStack {
-                                Image(systemName: "rotate.right")
-                                    .font(.title)
-                                Text("右旋转")
-                                    .font(.caption)
-                            }
+                    Picker("View", selection: $selectedView) {
+                        ForEach(DisplayView.allCases, id: \.self) { view in
+                            Text(view.rawValue)
+                                .tag(view)
                         }
                     }
+                    .pickerStyle(SegmentedPickerStyle())
+                    
+                    if selectedView == .content {
+                        VStack {
+                            ToggleImmersiveSpaceButton()
+                            
+                            HStack {
+                                Button {
+                                    toggleRotatingLeft()
+                                } label: {
+                                    VStack {
+                                        Image(systemName: "rotate.left")
+                                            .font(.title)
+                                        Text("左旋转")
+                                            .font(.caption)
+                                    }
+                                }
+                                
+                                Spacer()
+                                
+                                Button {
+                                    toggleRotatingRight()
+                                } label: {
+                                    VStack {
+                                        Image(systemName: "rotate.right")
+                                            .font(.title)
+                                        Text("右旋转")
+                                            .font(.caption)
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        Text("")
+                    }
                 }
+                .padding()
+                .frame(width: 400)
+                .glassBackgroundEffect()
             }
-        }
-        .onChange(of: positionData.frames) { oldFrames, newFrames in
-            updateContent(with: newFrames)
         }
     }
     
@@ -92,13 +109,15 @@ struct ContentView: View {
         rotationTimer?.invalidate()
         rotationTimer = nil
     }
-
-    private func updateContent(with frames: [Frame]) {
-        // 更新 RealityView 的内容
-    }
 }
 
 #Preview(windowStyle: .plain) {
     ContentView(rotationAngle: .constant(0))
         .environment(PositionData.shared)
 }
+
+enum DisplayView: String, CaseIterable {
+    case content = "Content View"
+    case heartBeat = "HeartBeat View"
+}
+

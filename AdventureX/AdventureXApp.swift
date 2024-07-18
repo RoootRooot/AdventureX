@@ -12,10 +12,6 @@ struct AdventureXApp: App {
     @State private var appModel = AppModel()
     @State private var rotationAngle: Float = 0.0
     
-//    init() {
-//        WebSocketManager.shared
-//    }
-    
     var body: some Scene {
         WindowGroup {
             ContentView(rotationAngle: $rotationAngle)
@@ -23,7 +19,7 @@ struct AdventureXApp: App {
                 .environment(PositionData.shared)
         }
         .windowStyle(.plain)
-        
+                
         ImmersiveSpace(id: appModel.immersiveSpaceID) {
             ImmersiveView(rotationAngle: $rotationAngle)
                 .environment(appModel)
