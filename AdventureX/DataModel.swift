@@ -6,15 +6,15 @@
 //
 
 import simd
+import SwiftyJSON
 import Foundation
 import Observation
-import Alamofire
-import SwiftyJSON
 
 struct Frame: Equatable, Identifiable {
-    let id: UUID
+    let id = UUID()
     let frameNum: Int
-    let positions: [SIMD3<Float>] // 3D 浮点数向量
+    let positions: [(coordinates: SIMD3<Float>, snr: Int, trackIndex: Int)] // 3D 浮点数向量，SNR 和 TrackIndex
+    let trackIndex: [Int]
     
     static func ==(lhs: Frame, rhs: Frame) -> Bool {
         return lhs.frameNum == rhs.frameNum
@@ -33,26 +33,31 @@ class PositionData {
         ringBuffer = RingBuffer(size: frameCount)
     }
     
-    func generatePoints(from json: [String: Any]) {
+    func generatePoints(from json: JSON) {
         updateQueue.async {
-            // 提取 JSON 字段参考自 ChatGPT
-            guard let pointCloudData = PointCloud(JSON: json),
-                  let pointCloud = pointCloudData.pointCloud,
-                  let frameNum = pointCloudData.frameNum else {
+            guard let frameNum = json["frameNum"].int,
+                  let pointCloud = json["pointCloud"].array,
+                  let trackIndexes = json["trackIndexes"].array else {
                 print("Invalid JSON format or missing pointCloud data")
                 return
             }
             
-            let positions: [SIMD3<Float>] = pointCloud.compactMap {
-                guard $0.count >= 3 else { return nil }
-                return SIMD3<Float>(
-                    Float($0[0]),
-                    Float($0[2]),
-                    -Float($0[1])
+            let positions: [(SIMD3<Float>, Int, Int)] = pointCloud.enumerated().compactMap { (index, point) in
+                guard point.count >= 4, index < trackIndexes.count else { return nil }
+                let coordinates = SIMD3<Float>(
+                    Float(point[0].doubleValue),
+                    Float(point[2].doubleValue),
+                    -Float(point[1].doubleValue)
                 )
+                
+                let snr = point[4].intValue
+                let trackIndex = trackIndexes[index].intValue
+                return (coordinates, snr, trackIndex)
             }
             
-            let frame = Frame(id: UUID(), frameNum: frameNum, positions: positions)
+            let trackIndexesArray = trackIndexes.compactMap { $0.int }
+            
+            let frame = Frame(frameNum: frameNum, positions: positions, trackIndex: trackIndexesArray)
             self.ringBuffer.write(frame)
             
             let frames = self.ringBuffer.read()
@@ -79,7 +84,7 @@ class PositionData {
     }
 }
 
-// 环形缓冲区参考自 ChatGPT
+// 环形缓冲区
 class RingBuffer<T> {
     private var buffer: [T?]
     private var readIndex = 0
@@ -115,28 +120,5 @@ class RingBuffer<T> {
     
     func latest() -> T? {
         return buffer[(writeIndex + size - 1) % size]
-    }
-}
-
-@Observable
-class HeartBeatModel {
-    var heartRate: Int = 0
-    var breathRate: Int = 0
-    
-    func fetchHeartBeatData(heartbeatData: HeartBeatModel) {
-        let url = ""
-        
-        AF.request(url).response { response in
-            switch response.result {
-            case .success(let value):
-                let json = JSON(value)
-                
-                self.heartRate = json["HeartRate"].intValue
-                self.breathRate = json["BreathRate"].intValue
-                
-            case .failure(let error):
-                print("Error: \(error)")
-            }
-        }
     }
 }

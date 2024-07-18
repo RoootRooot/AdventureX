@@ -129,14 +129,13 @@ struct ImmersiveView: View {
             
             let framesToAdd = newFrameIDs.subtracting(oldFrameIDs)
             
-            // Frame 添加机制参考自 ChatGPT
             for frame in newFrames {
                 if framesToAdd.contains(frame.id) {
                     var entities = [ModelEntity]()
                     
                     for position in frame.positions {
                         let cube = ModelEntity(mesh: cubeMesh, materials: [cubeMaterial])
-                        cube.position = position
+                        cube.position = position.coordinates
                         cube.collision = CollisionComponent(shapes: [ShapeResource.generateBox(size: [0.02, 0.02, 0.02])])
                         
                         entities.append(cube)

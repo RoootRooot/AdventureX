@@ -5,6 +5,7 @@
 //  Created by GH on 7/17/24.
 //
 
+import SwiftyJSON
 import Starscream
 import Foundation
 import Observation
@@ -50,9 +51,9 @@ class WebSocketManager: WebSocketDelegate {
             scheduleReconnect()
         case .text(let text):
             DispatchQueue.main.async {
-                if let json = text.data(using: .utf8),
-                   let jsonObject = try? JSONSerialization.jsonObject(with: json, options: []) as? [String: Any] {
-                    PositionData.shared.generatePoints(from: jsonObject)
+                if let data = text.data(using: .utf8) {
+                    let json = JSON(data)
+                    PositionData.shared.generatePoints(from: json)
                 }
             }
         case .binary(let data):
