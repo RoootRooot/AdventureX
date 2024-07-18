@@ -6,9 +6,10 @@
 //
 
 import simd
-import SwiftyJSON
 import Foundation
 import Observation
+import SwiftyJSON
+import RealityKit
 
 struct Frame: Equatable, Identifiable {
     let id = UUID()
@@ -28,6 +29,7 @@ class PositionData {
     private(set) var frames: [Frame] = []
     private var ringBuffer: RingBuffer<Frame>
     private var updateQueue = DispatchQueue(label: "PositionDataUpdateQueue")
+    var colorManager = TrackColorManager()
     
     private init(frameCount: Int) {
         ringBuffer = RingBuffer(size: frameCount)
@@ -70,7 +72,10 @@ class PositionData {
     
     private func removeOldestFrame() {
         if frames.count > 10 {
-            frames.removeFirst(frames.count - 10)
+            let removedFrame = frames.removeFirst()
+            removedFrame.trackIndex.forEach { trackIndex in
+                colorManager.releaseColor(for: trackIndex)
+            }
         }
     }
     
@@ -79,12 +84,12 @@ class PositionData {
             self.ringBuffer = RingBuffer(size: self.ringBuffer.size)
             DispatchQueue.main.async {
                 self.frames.removeAll()
+                self.colorManager.reset()
             }
         }
     }
 }
 
-// 环形缓冲区
 class RingBuffer<T> {
     private var buffer: [T?]
     private var readIndex = 0
@@ -121,4 +126,52 @@ class RingBuffer<T> {
     func latest() -> T? {
         return buffer[(writeIndex + size - 1) % size]
     }
+}
+
+class TrackColorManager {
+    private var colors: [SimpleMaterial.Color] = [
+        .red, .blue, .green, .yellow, .orange, .purple, .brown, .cyan, .magenta, .gray
+    ]
+    private var availableColors: [SimpleMaterial.Color]
+    private var trackColorMap: [Int: (color: SimpleMaterial.Color, count: Int)] = [:] // count 用于引用计数
+    
+    init() {
+        self.availableColors = colors
+    }
+    
+    func color(for trackIndex: Int) -> SimpleMaterial.Color {
+        if let (color, count) = trackColorMap[trackIndex] {
+            trackColorMap[trackIndex]?.count = count + 1
+            return color
+        }
+        if let color = availableColors.first {
+            trackColorMap[trackIndex] = (color, 1)
+            availableColors.removeFirst()
+            return color
+        }
+        return .white
+    }
+    
+    func releaseColor(for trackIndex: Int) {
+        if var (color, count) = trackColorMap[trackIndex] {
+            count -= 1
+            if count == 0 {
+                trackColorMap.removeValue(forKey: trackIndex)
+                availableColors.append(color)
+            } else {
+                trackColorMap[trackIndex]?.count = count
+            }
+        }
+    }
+    
+    func reset() {
+        trackColorMap.removeAll()
+        availableColors = colors
+    }
+}
+
+// 使用颜色创建 SimpleMaterial
+func createMaterial(for trackIndex: Int) -> SimpleMaterial {
+    let color = PositionData.shared.colorManager.color(for: trackIndex)
+    return SimpleMaterial(color: color, isMetallic: false)
 }

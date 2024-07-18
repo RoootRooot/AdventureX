@@ -77,26 +77,6 @@ struct ImmersiveView: View {
         
         baseEntity.position = [0, -0.95, 0]  // 将底座放在 Box 的下方
         boxEntity.addChild(baseEntity)
-        
-//        let sphereMesh = MeshResource.generateSphere(radius: 0.3)
-//        // Red sphere for X
-//        let redMaterial = SimpleMaterial(color: .red, isMetallic: false)
-//        let redSphere = ModelEntity(mesh: sphereMesh, materials: [redMaterial])
-//        redSphere.position = [1, 0, 0]
-//        
-//        // Green sphere for Y
-//        let greenMaterial = SimpleMaterial(color: .green, isMetallic: false)
-//        let greenSphere = ModelEntity(mesh: sphereMesh, materials: [greenMaterial])
-//        greenSphere.position = [0, 0, -1]
-//        
-//        // Blue sphere for Z
-//        let blueMaterial = SimpleMaterial(color: .blue, isMetallic: false)
-//        let blueSphere = ModelEntity(mesh: sphereMesh, materials: [blueMaterial])
-//        blueSphere.position = [0, 1, 0]
-//        
-//        boxEntity.addChild(redSphere)
-//        boxEntity.addChild(greenSphere)
-//        boxEntity.addChild(blueSphere)
     }
     
     private func rotateBox(to newAngle: Float) {
@@ -128,10 +108,15 @@ struct ImmersiveView: View {
                         self.boxEntity.removeChild(entity)
                     }
                 }
+                // 释放与 frameID 相关的颜色
+                if let frame = oldFrames.first(where: { $0.id == frameID }) {
+                    frame.positions.forEach { position in
+                        PositionData.shared.colorManager.releaseColor(for: position.trackIndex)
+                    }
+                }
             }
             
             let cubeMesh = MeshResource.generateBox(size: 0.04)
-            let cubeMaterial = SimpleMaterial(color: .white, roughness: 1.0, isMetallic: false)
             
             let framesToAdd = newFrameIDs.subtracting(oldFrameIDs)
             
@@ -140,9 +125,11 @@ struct ImmersiveView: View {
                     var entities = [ModelEntity]()
                     
                     for position in frame.positions {
+                        let color = PositionData.shared.colorManager.color(for: position.trackIndex)
+                        let cubeMaterial = SimpleMaterial(color: color, isMetallic: false)
                         let cube = ModelEntity(mesh: cubeMesh, materials: [cubeMaterial])
                         cube.position = position.coordinates
-                        cube.collision = CollisionComponent(shapes: [ShapeResource.generateBox(size: [0.02, 0.02, 0.02])])
+                        cube.collision = CollisionComponent(shapes: [ShapeResource.generateBox(size: [0.03, 0.03, 0.03])])
                         
                         entities.append(cube)
                     }
@@ -162,3 +149,24 @@ struct ImmersiveView: View {
     ImmersiveView(rotationAngle: .constant(0))
         .environment(PositionData.shared)
 }
+
+
+//        let sphereMesh = MeshResource.generateSphere(radius: 0.3)
+//        // Red sphere for X
+//        let redMaterial = SimpleMaterial(color: .red, isMetallic: false)
+//        let redSphere = ModelEntity(mesh: sphereMesh, materials: [redMaterial])
+//        redSphere.position = [1, 0, 0]
+//
+//        // Green sphere for Y
+//        let greenMaterial = SimpleMaterial(color: .green, isMetallic: false)
+//        let greenSphere = ModelEntity(mesh: sphereMesh, materials: [greenMaterial])
+//        greenSphere.position = [0, 0, -1]
+//
+//        // Blue sphere for Z
+//        let blueMaterial = SimpleMaterial(color: .blue, isMetallic: false)
+//        let blueSphere = ModelEntity(mesh: sphereMesh, materials: [blueMaterial])
+//        blueSphere.position = [0, 1, 0]
+//
+//        boxEntity.addChild(redSphere)
+//        boxEntity.addChild(greenSphere)
+//        boxEntity.addChild(blueSphere)
